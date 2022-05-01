@@ -5,7 +5,7 @@ import sys # In order to terminate the program
 serverSocket = socket(AF_INET, SOCK_STREAM)
 #Prepare a sever socket
 #Fill in start
-SERVER_ADDRESS = ('0.0.0.0', 12000)
+SERVER_ADDRESS = ('0.0.0.0', 13000)
 serverSocket.bind(SERVER_ADDRESS)
 serverSocket.listen(1)
 #Fill in end
@@ -23,11 +23,13 @@ while True:
         print("/nim in the try/n ")
         #Fill in start
         message = connectionSocket.recv(4096).decode()
-        # print(message)
+        print("printing message \n")
+        print(message)
+        print("finish printing message \n")
         #Fill in end
         filename = message.split()[1]
-        if (filename[1:] == 'favicon.ico'):
-            continue
+        # if (filename[1:] == 'favicon.ico'):
+        #     continue
         print(filename)
         f = open(filename[1:])
         #Fill in start
@@ -36,7 +38,7 @@ while True:
 
         # Send one HTTP header line into socket
         # Fill in start
-        connectionSocket.send("HTTP/1.1 200 OK\n".encode())
+        connectionSocket.send("200 OK\n".encode())
         # Fill in end
 
         #Send the content of the requested file to the client
@@ -49,7 +51,7 @@ while True:
         print("exception caught")
         #Send response message for file not found
         #Fill in start
-        connectionSocket.send(bytes("404 Not Found\n"))
+        connectionSocket.send("404 Not Found".encode())
         #Fill in end
 
         #Close client socket
