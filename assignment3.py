@@ -4,41 +4,36 @@ import sys # In order to terminate the program
 
 serverSocket = socket(AF_INET, SOCK_STREAM)
 #Prepare a sever socket
-#Fill in start
-SERVER_ADDRESS = ('0.0.0.0', 13000)
-serverSocket.bind(SERVER_ADDRESS)
-serverSocket.listen(1)
-#Fill in end
+
+SERVER_ADDRESS = ('0.0.0.0', 12000) # create a socket that is listing to all ips
+serverSocket.bind(SERVER_ADDRESS) # binding the socket with the port
+serverSocket.listen(1) # telling the socket to listen for 1 request at a time
 
 while True:
     #Establish the connection
     print('Ready to serve...')
-    #Fill in start
-    connectionSocket, addr = serverSocket.accept()
-    print("made a connection with ", connectionSocket, addr)
-    #Fill in end
 
+    connectionSocket, addr = serverSocket.accept() # connecting with a client
 
     try:
-        print("/nim in the try/n ")
-        #Fill in start
-        message = connectionSocket.recv(4096).decode()
-        print("printing message \n")
+
+        message = connectionSocket.recv(1024).decode() # getting the request message form the client
+        # message = connectionSocket.recv(1024)
+        print("printing message")
         print(message)
-        print("finish printing message \n")
-        #Fill in end
-        filename = message.split()[1]
-        # if (filename[1:] == 'favicon.ico'):
+        print("finish printing message")
+
+        filename = message.split()[1] # getting the filename from the message
+
+        # if (filename[1:] == 'favicon.ico'): # we added this because it the server is getting another filena,e with this name after it gets the html file.
         #     continue
-        print(filename)
-        f = open(filename[1:])
-        #Fill in start
-        outputdata = f.read()
-        #Fill in end
+
+        f = open(filename[1:]) # opening the file statrting from the 2nd char in the name (the name starts with \ and we dont want that)
+        outputdata = f.read() # the data we want to return in the file
 
         # Send one HTTP header line into socket
         # Fill in start
-        connectionSocket.send("200 OK\n".encode())
+        connectionSocket.send("200 OK\r\n".encode()) # sending a message saying we got the request and were able to acsses the file
         # Fill in end
 
         #Send the content of the requested file to the client
@@ -47,20 +42,21 @@ while True:
         connectionSocket.send("\r\n".encode())
 
         connectionSocket.close()
-    except IOError:
+    except IOError :
         print("exception caught")
+
         #Send response message for file not found
         #Fill in start
-        connectionSocket.send("404 Not Found".encode())
+        connectionSocket.send("404 Not Found\r\n".encode()) # sending a response saying we weren't able to accses the file
         #Fill in end
 
         #Close client socket
-        #Fill in start
+
         connectionSocket.close()
-        # print("closed client socket")
-        #Fill in end
+        # print("closed connectionSocket socket")
+
 
 serverSocket.close()
-print("closed server socket")
+# print("closed server socket")
 sys.exit()#Terminate the program after sending the corresponding data                                    
 
