@@ -17,24 +17,14 @@ while True:
 
     try:
 
-        # message = connectionSocket.recv(1024).decode() # getting the request message form the client
-        message = connectionSocket.recv(1024)
-        # print("printing message")
-        # print(message)
-        # print("finish printing message")
-
+        message = connectionSocket.recv(1024) # getting the request message form the client
         filename = message.split()[1] # getting the filename from the message
-
-        # if (filename[1:] == 'favicon.ico'): # we added this because it the server is getting another filena,e with this name after it gets the html file.
-        #     continue
-        # if(filename[1:] != 'favicon.ico'):
         f = open(filename[1:]) # opening the file statrting from the 2nd char in the name (the name starts with \ and we dont want that)
         outputdata = f.read() # the data we want to return in the file
         print(outputdata)
         # Send one HTTP header line into socket
         connectionSocket.send('\nHTTP/1.1 200 OK\n\n'.encode()) # sending a message saying we got the request and were able to acsses the file        
                
-
         #Send the content of the requested file to the client
         for i in range(0, len(outputdata)):
             connectionSocket.send(outputdata[i].encode())
@@ -50,10 +40,9 @@ while True:
        
         #Close client socket
         connectionSocket.close()
-        # print("closed connectionSocket socket")
+        
 
 
 serverSocket.close()
-# print("closed server socket")
 sys.exit()#Terminate the program after sending the corresponding data                                    
 
